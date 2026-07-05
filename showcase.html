@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android Clean Architecture — Skill Showcase</title>
+    <meta name="description" content="Interactive showcase of the Android Clean Architecture skill for KMP projects.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ── Design Tokens ── */
+        :root {
+            --bg-deep: #0a0a1a;
+            --bg-surface: #111126;
+            --bg-elevated: #1a1a2e;
+            --bg-card: #16162a;
+            --accent: #00FF85;
+            --accent-dim: #00cc6a;
+            --purple: #3D195B;
+            --purple-light: #5a2d80;
+            --purple-glow: rgba(61, 25, 91, 0.4);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0c8;
+            --text-muted: #6b6b8d;
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-accent: rgba(0, 255, 133, 0.15);
+            --red: #ff4466;
+            --amber: #ffaa00;
+            --blue: #4488ff;
+            --cyan: #00ccff;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+        }
+
+        /* ── Reset ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 3px; }
+
+        /* ── Animated Grid Background ── */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridFloat 20s linear infinite;
+        }
+        @keyframes gridFloat {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        /* ── Glow Orbs ── */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb-1 { width: 500px; height: 500px; background: var(--purple); top: -100px; right: -100px; animation: orbFloat1 15s ease-in-out infinite; }
+        .orb-2 { width: 400px; height: 400px; background: var(--accent); bottom: -150px; left: -100px; opacity: 0.15; animation: orbFloat2 18s ease-in-out infinite; }
+        .orb-3 { width: 300px; height: 300px; background: var(--blue); top: 50%; left: 50%; opacity: 0.1; animation: orbFloat3 12s ease-in-out infinite; }
+
+        @keyframes orbFloat1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-60px, 40px); } }
+        @keyframes orbFloat2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(40px, -60px); } }
+        @keyframes orbFloat3 { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-40%, -60%); } }
+
+        /* ── Container ── */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ── Hero Section ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 24px;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 100px;
+            background: rgba(0, 255, 133, 0.08);
+            border: 1px solid var(--border-accent);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 32px;
+            animation: fadeInUp 0.8s ease;
+        }
+        .hero-badge::before { content: ''; }
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1.05;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.8s ease 0.1s both;
+        }
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--accent), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 48px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+        .stat { text-align: center; }
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Section ── */
+        section {
+            padding: 100px 0;
+        }
+        .section-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+        .section-desc {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 48px;
+        }
+
+        /* ── Architecture Diagram ── */
+        .arch-layers {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+        .arch-layer {
+            padding: 28px 36px;
+            border-radius: var(--radius-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .arch-layer:hover {
+            transform: scale(1.02);
+            z-index: 2;
+        }
+        .arch-layer.ui {
+            background: linear-gradient(135deg, rgba(0, 204, 255, 0.12), rgba(0, 204, 255, 0.04));
+            border: 1px solid rgba(0, 204, 255, 0.2);
+        }
+        .arch-layer.ui:hover { box-shadow: 0 0 40px rgba(0, 204, 255, 0.15); }
+        .arch-layer.domain {
+            background: linear-gradient(135deg, rgba(0, 255, 133, 0.12), rgba(0, 255, 133, 0.04));
+            border: 1px solid rgba(0, 255, 133, 0.2);
+        }
+        .arch-layer.domain:hover { box-shadow: 0 0 40px rgba(0, 255, 133, 0.15); }
+        .arch-layer.data {
+            background: linear-gradient(135deg, rgba(61, 25, 91, 0.3), rgba(61, 25, 91, 0.1));
+            border: 1px solid rgba(90, 45, 128, 0.3);
+        }
+        .arch-layer.data:hover { box-shadow: 0 0 40px var(--purple-glow); }
+
+        .layer-name {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .layer-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .layer-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* ── Dependency Arrow ── */
+        .dep-arrow {
+            text-align: center;
+            padding: 8px 0;
+            color: var(--text-muted);
+            font-size: 20px;
+            letter-spacing: 4px;
+        }
+
+        /* ── Cards Grid ── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .card:hover {
+            border-color: var(--border-accent);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .card:hover::before { opacity: 1; }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .card-icon.green { background: rgba(0,255,133,0.1); }
+        .card-icon.purple { background: rgba(61,25,91,0.3); }
+        .card-icon.blue { background: rgba(68,136,255,0.1); }
+        .card-icon.amber { background: rgba(255,170,0,0.1); }
+        .card-icon.cyan { background: rgba(0,204,255,0.1); }
+        .card-icon.red { background: rgba(255,68,102,0.1); }
+
+        .card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ── Code Block ── */
+        .code-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 48px;
+        }
+        .code-block {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .code-header-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .code-header-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 100px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .badge-domain { background: rgba(0,255,133,0.1); color: var(--accent); }
+        .badge-data { background: var(--purple-glow); color: #c090ee; }
+        .badge-ui { background: rgba(0,204,255,0.1); color: var(--cyan); }
+        .badge-di { background: rgba(255,170,0,0.1); color: var(--amber); }
+
+        .code-content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            overflow-x: auto;
+        }
+        .code-content pre { white-space: pre; }
+        .kw { color: #c792ea; }       /* keyword */
+        .fn { color: #82aaff; }       /* function */
+        .tp { color: #ffcb6b; }       /* type */
+        .st { color: #c3e88d; }       /* string */
+        .cm { color: #546e7a; }       /* comment */
+        .pr { color: #f07178; }       /* property */
+        .nm { color: #f78c6c; }       /* number */
+        .ac { color: var(--accent); } /* accent */
+
+        /* ── Flow Diagram ── */
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 48px 0;
+        }
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 24px;
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            min-width: 120px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .flow-step:hover {
+            border-color: var(--border-accent);
+            transform: translateY(-3px);
+        }
+        .flow-step-icon { font-size: 24px; }
+        .flow-step-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .flow-step-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+        .flow-arrow {
+            font-size: 20px;
+            color: var(--accent);
+            animation: arrowPulse 2s ease-in-out infinite;
+        }
+        @keyframes arrowPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        /* ── Anti-patterns Table ── */
+        .anti-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 6px;
+            margin-top: 32px;
+        }
+        .anti-table th {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 12px 20px;
+            text-align: left;
+        }
+        .anti-table td {
+            padding: 16px 20px;
+            font-size: 14px;
+            background: var(--bg-card);
+        }
+        .anti-table tr td:first-child {
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+            color: var(--red);
+        }
+        .anti-table tr td:last-child {
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            color: var(--accent);
+        }
+
+        /* ── Checklist ── */
+        .checklist {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px;
+            margin-top: 32px;
+        }
+        .checklist li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .checklist li:hover {
+            border-color: var(--border-accent);
+            color: var(--text-primary);
+        }
+        .checklist li.checked {
+            border-color: rgba(0,255,133,0.3);
+            background: rgba(0,255,133,0.04);
+        }
+        .checklist li.checked .check-box {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+        .checklist li.checked .check-box::after { opacity: 1; }
+        .check-box {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--text-muted);
+            border-radius: 5px;
+            flex-shrink: 0;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .check-box::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--bg-deep);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        /* ── Tech Stack ── */
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 32px;
+        }
+        .tech-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 22px;
+            border-radius: var(--radius-xl);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .tech-chip:hover {
+            border-color: var(--border-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        .tech-chip-icon {
+            font-size: 20px;
+        }
+
+        /* ── Footer ── */
+        footer {
+            padding: 60px 0;
+            text-align: center;
+            border-top: 1px solid var(--border-subtle);
+        }
+        footer p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        footer .footer-accent {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 16px 24px;
+            background: rgba(10, 10, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-weight: 800;
+            font-size: 18px;
+            letter-spacing: -0.5px;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .code-showcase { grid-template-columns: 1fr; }
+            .hero-stats { flex-direction: column; gap: 20px; }
+            .arch-layer { flex-direction: column; gap: 12px; align-items: flex-start; }
+            .layer-tags { justify-content: flex-start; }
+            nav { padding: 12px 16px; }
+            .nav-links { display: none; }
+            .flow-container { flex-direction: column; }
+            .flow-arrow { transform: rotate(90deg); }
+        }
+        /* ── Feather Icons ── */
+        .card-icon i, .flow-step-icon i, .layer-name i, .tech-chip-icon i, .ref-icon i {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2;
+        }
+        .card-icon i { color: inherit; }
+        .card-icon.green i { color: var(--accent); }
+        .card-icon.purple i { color: #c090ee; }
+        .card-icon.blue i { color: var(--blue); }
+        .card-icon.amber i { color: var(--amber); }
+        .card-icon.cyan i { color: var(--cyan); }
+        .card-icon.red i { color: var(--red); }
+        .flow-step-icon i { color: var(--accent); width: 28px; height: 28px; }
+        .layer-name i { color: inherit; vertical-align: -3px; margin-right: 6px; }
+        .arch-layer.ui .layer-name i { color: var(--cyan); }
+        .arch-layer.domain .layer-name i { color: var(--accent); }
+        .arch-layer.data .layer-name i { color: #c090ee; }
+        .tech-chip-icon i { width: 20px; height: 20px; color: var(--accent); }
+        .ref-icon { display:flex; justify-content:center; margin-bottom:16px; }
+        .ref-icon i { width: 32px; height: 32px; color: var(--accent); }
+    </style>
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+
+    <!-- Background Effects -->
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-logo"><i data-feather="hexagon" style="width:18px;height:18px;color:var(--accent);vertical-align:-3px;margin-right:6px;"></i>Clean <span>Architecture</span></div>
+        <ul class="nav-links">
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#patterns">Patterns</a></li>
+            <li><a href="#flow">Data Flow</a></li>
+            <li><a href="#stack">Stack</a></li>
+            <li><a href="#rules">Règles</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge"><i data-feather="zap" style="width:14px;height:14px;"></i> Global Skill</div>
+        <h1>Android<br><span class="gradient-text">Clean Architecture</span></h1>
+        <p>Patterns, structures et règles pour construire des applications Android/KMP robustes, testables et maintenables.</p>
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Layers</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Références</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Patterns</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">44KB</div>
+                <div class="stat-label">Total</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Layers -->
+    <section id="architecture">
+        <div class="container">
+            <div class="section-label">Architecture</div>
+            <h2 class="section-title">Les 3 couches</h2>
+            <p class="section-desc">Chaque couche a une responsabilité unique. La règle d'or : le domain ne dépend de rien.</p>
+
+            <div class="arch-layers">
+                <div class="arch-layer ui">
+                    <div>
+                        <div class="layer-name"><i data-feather="monitor"></i> UI Layer</div>
+                        <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Présentation — Compose Screens + ViewModels</div>
+                    </div>
+                    <div class="layer-tags">
+                        <span class="layer-tag">@Composable</span>
+                        <span class="layer-tag">ViewModel</span>
+                        <span class="layer-tag">UiState</span>
+                    </div>
+                </div>
+                <div class="dep-arrow">▼ ▼ ▼</div>
+                <div class="arch-layer domain">
+                    <div>
+                        <div class="layer-name"><i data-feather="hexagon"></i> Domain Layer</div>
+                        <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Business — Modèles purs + Interfaces + UseCases</div>
+                    </div>
+                    <div class="layer-tags">
+                        <span class="layer-tag">data class</span>
+                        <span class="layer-tag">interface</span>
+                        <span class="layer-tag">Flow</span>
+                    </div>
+                </div>
+                <div class="dep-arrow">▲ ▲ ▲</div>
+                <div class="arch-layer data">
+                    <div>
+                        <div class="layer-name"><i data-feather="database"></i> Data Layer</div>
+                        <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Infrastructure — DTOs, Mappers, API, DB</div>
+                    </div>
+                    <div class="layer-tags">
+                        <span class="layer-tag">Ktor</span>
+                        <span class="layer-tag">Room</span>
+                        <span class="layer-tag">Mapper</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align:center; padding: 20px; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); max-width: 500px; margin: 0 auto;">
+                <div style="font-family:'JetBrains Mono',monospace; font-size: 16px; color: var(--text-secondary);">
+                    <span style="color:var(--cyan)">UI</span> → <span style="color:var(--accent)">Domain</span> ← <span style="color:#c090ee">Data</span>
+                </div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:8px;">Domain ne connaît RIEN de UI ou Data</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Patterns -->
+    <section id="patterns">
+        <div class="container">
+            <div class="section-label">Patterns</div>
+            <h2 class="section-title">Briques standards</h2>
+            <p class="section-desc">Chaque pattern a un rôle précis. Combinés ensemble, ils forment une architecture robuste et testable.</p>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon green"><i data-feather="box"></i></div>
+                    <h3>Domain Model</h3>
+                    <p>Pure Kotlin <code>data class</code> — zéro dépendance framework. Le cœur métier de l'application.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon green"><i data-feather="clipboard"></i></div>
+                    <h3>Repository Interface</h3>
+                    <p>Contrat défini dans le domain. Implémenté par le data layer. Le ViewModel ne voit que l'interface.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon green"><i data-feather="zap"></i></div>
+                    <h3>UseCase</h3>
+                    <p><code>operator fun invoke()</code> — encapsule une opération métier. Optionnel, utilisé si logique partagée ≥2 VMs.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple"><i data-feather="repeat"></i></div>
+                    <h3>Mapper</h3>
+                    <p>Convertit DTO ↔ Domain. Deux styles : <code>object Mapper</code> ou extension functions. Jamais dans le ViewModel.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple"><i data-feather="layers"></i></div>
+                    <h3>Repository Impl</h3>
+                    <p>Implémentation concrète avec <code>runCatching</code>. Coordonne remote + local DataSources.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon purple"><i data-feather="radio"></i></div>
+                    <h3>DTO</h3>
+                    <p><code>@Serializable</code> data class qui reflète le JSON API. Isolé dans <code>data/remote/dto/</code>.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon cyan"><i data-feather="cpu"></i></div>
+                    <h3>ViewModel</h3>
+                    <p>State holder injectant des interfaces domain via Koin. Expose un <code>StateFlow&lt;UiState&gt;</code>.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon cyan"><i data-feather="target"></i></div>
+                    <h3>UiState</h3>
+                    <p><code>sealed interface</code> : Loading | Success | Error. Toujours exhaustif dans le <code>when</code>.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon cyan"><i data-feather="smartphone"></i></div>
+                    <h3>Screen</h3>
+                    <p>Composable stateless. Reçoit des données + callbacks. Séparé du Route (connecté au VM).</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon amber"><i data-feather="settings"></i></div>
+                    <h3>Koin Module</h3>
+                    <p>Câblage <code>interface → impl</code> au runtime. <code>single</code> pour les repos, <code>viewModel</code> pour les VMs.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon red"><i data-feather="shield"></i></div>
+                    <h3>Error Handling</h3>
+                    <p><code>Result&lt;T&gt;</code> + <code>runCatching</code> ou custom <code>AppResult&lt;T&gt;</code> sealed type pour des erreurs typées.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon blue"><i data-feather="check-circle"></i></div>
+                    <h3>Fake Repository</h3>
+                    <p>Test double qui implémente l'interface domain. Pas de mocking framework — des Fakes purs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Showcase -->
+    <section>
+        <div class="container">
+            <div class="section-label">Code</div>
+            <h2 class="section-title">Exemples concrets</h2>
+            <p class="section-desc">Du domain model au ViewModel — chaque layer a un style distinct.</p>
+
+            <div class="code-showcase">
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-header-title">domain/model/Match.kt</span>
+                        <span class="code-header-badge badge-domain">Domain</span>
+                    </div>
+                    <div class="code-content"><pre><span class="cm">// Zéro import framework</span>
+<span class="kw">data class</span> <span class="tp">Match</span>(
+    <span class="kw">val</span> <span class="pr">homeTeam</span>: <span class="tp">Club</span>,
+    <span class="kw">val</span> <span class="pr">awayTeam</span>: <span class="tp">Club</span>,
+    <span class="kw">val</span> <span class="pr">homeScore</span>: <span class="tp">Int</span>,
+    <span class="kw">val</span> <span class="pr">awayScore</span>: <span class="tp">Int</span>,
+    <span class="kw">val</span> <span class="pr">status</span>: <span class="tp">MatchStatus</span>,
+)
+
+<span class="kw">enum class</span> <span class="tp">MatchStatus</span> {
+    <span class="ac">NOT_STARTED</span>, <span class="ac">LIVE</span>, <span class="ac">FINISHED</span>
+}</pre></div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-header-title">data/remote/mapper/MatchMapper.kt</span>
+                        <span class="code-header-badge badge-data">Data</span>
+                    </div>
+                    <div class="code-content"><pre><span class="kw">object</span> <span class="tp">MatchMapper</span> {
+    <span class="kw">fun</span> <span class="fn">toDomain</span>(dto: <span class="tp">FixtureDto</span>): <span class="tp">Match</span> {
+        <span class="kw">return</span> <span class="tp">Match</span>(
+            homeTeam = <span class="fn">mapTeam</span>(dto.teams.home),
+            awayTeam = <span class="fn">mapTeam</span>(dto.teams.away),
+            homeScore = dto.goals.home ?: <span class="nm">0</span>,
+            awayScore = dto.goals.away ?: <span class="nm">0</span>,
+            status = <span class="fn">mapStatus</span>(dto.status),
+        )
+    }
+}</pre></div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-header-title">ui/viewmodel/MatchesViewModel.kt</span>
+                        <span class="code-header-badge badge-ui">UI</span>
+                    </div>
+                    <div class="code-content"><pre><span class="kw">class</span> <span class="tp">MatchesViewModel</span>(
+    <span class="kw">private val</span> <span class="pr">repository</span>: <span class="tp">MatchRepository</span>,
+) : <span class="tp">ViewModel</span>() {
+
+    <span class="kw">val</span> <span class="pr">uiState</span> = <span class="tp">MutableStateFlow</span>&lt;<span class="tp">UiState</span>&gt;(Loading)
+
+    <span class="kw">fun</span> <span class="fn">loadMatches</span>(date: <span class="tp">LocalDate</span>) {
+        viewModelScope.<span class="fn">launch</span> {
+            repository.<span class="fn">getMatches</span>(date)
+                .<span class="fn">onSuccess</span> { <span class="pr">uiState</span>.value = <span class="tp">Success</span>(it) }
+                .<span class="fn">onFailure</span> { <span class="pr">uiState</span>.value = <span class="tp">Error</span>(it) }
+        }
+    }
+}</pre></div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-header-title">di/AppModules.kt</span>
+                        <span class="code-header-badge badge-di">DI</span>
+                    </div>
+                    <div class="code-content"><pre><span class="kw">val</span> <span class="pr">repositoryModule</span> = <span class="fn">module</span> {
+    <span class="fn">single</span>&lt;<span class="tp">MatchRepository</span>&gt; {
+        <span class="tp">MatchRepositoryImpl</span>(<span class="fn">get</span>())
+    }
+    <span class="fn">single</span>&lt;<span class="tp">NewsRepository</span>&gt; {
+        <span class="tp">NewsRepositoryImpl</span>(<span class="fn">get</span>())
+    }
+}
+
+<span class="kw">val</span> <span class="pr">viewModelModule</span> = <span class="fn">module</span> {
+    <span class="fn">viewModel</span> { <span class="tp">MatchesViewModel</span>(<span class="fn">get</span>()) }
+    <span class="fn">viewModel</span> { <span class="tp">NewsViewModel</span>(<span class="fn">get</span>()) }
+}</pre></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Flow -->
+    <section id="flow">
+        <div class="container">
+            <div class="section-label">Data Flow</div>
+            <h2 class="section-title">Flux unidirectionnel</h2>
+            <p class="section-desc">Les events descendent, les données montent. Jamais de raccourci.</p>
+
+            <div class="flow-container">
+                <div class="flow-step">
+                    <div class="flow-step-icon"><i data-feather="mouse-pointer"></i></div>
+                    <div class="flow-step-label">User Action</div>
+                    <div class="flow-step-sub">tap, scroll</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-step-icon"><i data-feather="layout"></i></div>
+                    <div class="flow-step-label">Screen</div>
+                    <div class="flow-step-sub">@Composable</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-step-icon"><i data-feather="cpu"></i></div>
+                    <div class="flow-step-label">ViewModel</div>
+                    <div class="flow-step-sub">StateFlow</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-step-icon"><i data-feather="git-branch"></i></div>
+                    <div class="flow-step-label">Repository</div>
+                    <div class="flow-step-sub">interface</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-step-icon"><i data-feather="hard-drive"></i></div>
+                    <div class="flow-step-label">DataSource</div>
+                    <div class="flow-step-sub">Ktor / Room</div>
+                </div>
+            </div>
+
+            <div class="flow-container" style="margin-top: 20px;">
+                <div class="flow-step" style="border-color: var(--border-accent);">
+                    <div class="flow-step-icon"><i data-feather="check-circle"></i></div>
+                    <div class="flow-step-label">Domain Model</div>
+                    <div class="flow-step-sub">retour mappé</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-step-icon"><i data-feather="target"></i></div>
+                    <div class="flow-step-label">UiState</div>
+                    <div class="flow-step-sub">Success(data)</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="flow-step-icon"><i data-feather="refresh-cw"></i></div>
+                    <div class="flow-step-label">Recompose</div>
+                    <div class="flow-step-sub">UI updated</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section id="stack">
+        <div class="container">
+            <div class="section-label">Stack</div>
+            <h2 class="section-title">Technologies</h2>
+            <p class="section-desc">Stack KMP-first — maximum de code partagé entre Android et iOS.</p>
+
+            <div class="tech-grid">
+                <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="code"></i></span> Kotlin Multiplatform</div>
+                <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="pen-tool"></i></span> Compose Multiplatform</div>
+                <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="package"></i></span> Koin DI</div>
+                <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="globe"></i></span> Ktor Client</div>
+                <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="database"></i></span> Room KMP</div>
+                <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="grid"></i></span> SQLDelight</div>
+                <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="zap"></i></span> Coroutines</div>
+                <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="activity"></i></span> Kotlin Flow</div>
+                <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="file-text"></i></span> kotlinx.serialization</div>
+                <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="image"></i></span> Coil 3</div>
+                <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="check-square"></i></span> Turbine</div>
+                <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="navigation"></i></span> Navigation Compose</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Anti-patterns -->
+    <section id="rules">
+        <div class="container">
+            <div class="section-label">Règles</div>
+            <h2 class="section-title">Anti-patterns</h2>
+            <p class="section-desc">Ce qu'il faut éviter absolument — et la bonne alternative.</p>
+
+            <table class="anti-table">
+                <thead>
+                    <tr><th>❌ Ne pas faire</th><th>✅ Faire</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Importer <code>data.*</code> dans le UI</td><td>Importer uniquement <code>domain.model.*</code></td></tr>
+                    <tr><td>Logique métier dans <code>@Composable</code></td><td>Extraire dans ViewModel ou UseCase</td></tr>
+                    <tr><td>DTOs comme modèles domain</td><td>Modèles domain séparés + mappers</td></tr>
+                    <tr><td>Hilt/Dagger en KMP</td><td>Koin (multiplatform compatible)</td></tr>
+                    <tr><td>Retrofit en KMP</td><td>Ktor Client</td></tr>
+                    <tr><td><code>GlobalScope</code></td><td><code>viewModelScope</code> ou structured concurrency</td></tr>
+                    <tr><td>Fat repository avec toute la logique</td><td>Séparer en DataSources focalisés</td></tr>
+                    <tr><td>ViewModel dans <code>screens/</code></td><td>Package <code>viewmodel/</code> séparé</td></tr>
+                    <tr><td>Android framework dans <code>domain/</code></td><td>Domain = pure Kotlin uniquement</td></tr>
+                    <tr><td>try/catch sans mapper les erreurs</td><td><code>runCatching</code> ou <code>Result&lt;T&gt;</code></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Checklist -->
+    <section>
+        <div class="container">
+            <div class="section-label">Checklist</div>
+            <h2 class="section-title">Nouvelle feature</h2>
+            <p class="section-desc">Les étapes à suivre pour chaque nouvelle fonctionnalité.</p>
+
+            <ul class="checklist" id="checklist">
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Domain model créé (pure Kotlin)</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Repository interface dans domain/</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>UseCase (optionnel — si logique partagée)</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>DTOs avec @Serializable</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Mapper DTO → Domain</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Repository impl avec runCatching</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>UiState sealed class</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>ViewModel injecte interface domain</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Screen stateless @Composable</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Koin bindings mis à jour</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Loading + Success + Error</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Error handling avec Result&lt;T&gt;</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- References -->
+    <section>
+        <div class="container">
+            <div class="section-label">Fichiers</div>
+            <h2 class="section-title">Références du skill</h2>
+            <p class="section-desc">5 documents de référence détaillés pour approfondir chaque sujet.</p>
+
+            <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+                <div class="card" style="text-align:center;">
+                    <div class="ref-icon"><i data-feather="layers"></i></div>
+                    <h3>architecture.md</h3>
+                    <p>3 layers, DataSource, offline-first, expect/actual, convention plugins</p>
+                    <div style="margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted);">10.7 KB</div>
+                </div>
+                <div class="card" style="text-align:center;">
+                    <div class="ref-icon"><i data-feather="pen-tool"></i></div>
+                    <h3>compose-patterns.md</h3>
+                    <p>State hoisting, shimmer, performance, remember, theme tokens</p>
+                    <div style="margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted);">4.5 KB</div>
+                </div>
+                <div class="card" style="text-align:center;">
+                    <div class="ref-icon"><i data-feather="folder"></i></div>
+                    <h3>modularization.md</h3>
+                    <p>Single-module vs multi-module, KMP structure, dependency rules</p>
+                    <div style="margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted);">3.5 KB</div>
+                </div>
+                <div class="card" style="text-align:center;">
+                    <div class="ref-icon"><i data-feather="settings"></i></div>
+                    <h3>gradle-setup.md</h3>
+                    <p>Version catalog, Ktor/Retrofit config, bundles, build.gradle.kts</p>
+                    <div style="margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted);">6.3 KB</div>
+                </div>
+                <div class="card" style="text-align:center;">
+                    <div class="ref-icon"><i data-feather="check-square"></i></div>
+                    <h3>testing.md</h3>
+                    <p>Fakes, ViewModel tests, Mapper tests, Turbine, runTest</p>
+                    <div style="margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted);">4.8 KB</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>Built with <span class="footer-accent">Android Clean Architecture</span> skill — KMP · Koin · Ktor · Compose Multiplatform</p>
+            <p style="margin-top:8px; font-size: 11px;">~44 KB total · 6 fichiers · Global skill auto-activé</p>
+        </div>
+    </footer>
+
+    <script>feather.replace();</script>
+</body>
+</html>
