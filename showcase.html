@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -736,7 +736,7 @@
             <li><a href="#patterns">Patterns</a></li>
             <li><a href="#flow">Data Flow</a></li>
             <li><a href="#stack">Stack</a></li>
-            <li><a href="#rules">Règles</a></li>
+            <li><a href="#rules">Rules</a></li>
             <li><a href="#install">Install</a></li>
             <li><a href="https://github.com/MedAmineTazarki/android-clean-architecture-skill" target="_blank" style="color:var(--accent);"><i data-feather="github" style="width:16px;height:16px;vertical-align:-3px;"></i></a></li>
         </ul>
@@ -746,7 +746,7 @@
     <section class="hero">
         <div class="hero-badge"><i data-feather="zap" style="width:14px;height:14px;"></i> Global Skill</div>
         <h1>Android<br><span class="gradient-text">Clean Architecture</span></h1>
-        <p>Patterns, structures et règles pour construire des applications Android/KMP robustes, testables et maintenables.</p>
+        <p>Patterns, structures and rules for building robust, testable, and maintainable Android/KMP applications.</p>
         <div class="hero-stats">
             <div class="stat">
                 <div class="stat-value">3</div>
@@ -754,7 +754,7 @@
             </div>
             <div class="stat">
                 <div class="stat-value">5</div>
-                <div class="stat-label">Références</div>
+                <div class="stat-label">References</div>
             </div>
             <div class="stat">
                 <div class="stat-value">12</div>
@@ -767,7 +767,7 @@
         </div>
         <div class="hero-actions">
             <a href="https://github.com/MedAmineTazarki/android-clean-architecture-skill" target="_blank" class="btn btn-primary"><i data-feather="github"></i> GitHub</a>
-            <a href="#install" class="btn btn-outline"><i data-feather="download"></i> Installer</a>
+            <a href="#install" class="btn btn-outline"><i data-feather="download"></i> Install</a>
         </div>
     </section>
 
@@ -775,14 +775,14 @@
     <section id="architecture">
         <div class="container">
             <div class="section-label">Architecture</div>
-            <h2 class="section-title">Les 3 couches</h2>
-            <p class="section-desc">Chaque couche a une responsabilité unique. La règle d'or : le domain ne dépend de rien.</p>
+            <h2 class="section-title">The 3 Layers</h2>
+            <p class="section-desc">Each layer has a single responsibility. The golden rule: domain depends on nothing.</p>
 
             <div class="arch-layers">
                 <div class="arch-layer ui">
                     <div>
                         <div class="layer-name"><i data-feather="monitor"></i> UI Layer</div>
-                        <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Présentation — Compose Screens + ViewModels</div>
+                        <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Presentation — Compose Screens + ViewModels</div>
                     </div>
                     <div class="layer-tags">
                         <span class="layer-tag">@Composable</span>
@@ -794,7 +794,7 @@
                 <div class="arch-layer domain">
                     <div>
                         <div class="layer-name"><i data-feather="hexagon"></i> Domain Layer</div>
-                        <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Business — Modèles purs + Interfaces + UseCases</div>
+                        <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">Business — Pure models + Interfaces + UseCases</div>
                     </div>
                     <div class="layer-tags">
                         <span class="layer-tag">data class</span>
@@ -820,7 +820,7 @@
                 <div style="font-family:'JetBrains Mono',monospace; font-size: 16px; color: var(--text-secondary);">
                     <span style="color:var(--cyan)">UI</span> → <span style="color:var(--accent)">Domain</span> ← <span style="color:#c090ee">Data</span>
                 </div>
-                <div style="font-size:12px; color:var(--text-muted); margin-top:8px;">Domain ne connaît RIEN de UI ou Data</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:8px;">Domain knows NOTHING about UI or Data</div>
             </div>
         </div>
     </section>
@@ -829,69 +829,69 @@
     <section id="patterns">
         <div class="container">
             <div class="section-label">Patterns</div>
-            <h2 class="section-title">Briques standards</h2>
-            <p class="section-desc">Chaque pattern a un rôle précis. Combinés ensemble, ils forment une architecture robuste et testable.</p>
+            <h2 class="section-title">Building Blocks</h2>
+            <p class="section-desc">Each pattern has a specific role. Combined together, they form a robust and testable architecture.</p>
 
             <div class="cards-grid">
                 <div class="card">
                     <div class="card-icon green"><i data-feather="box"></i></div>
                     <h3>Domain Model</h3>
-                    <p>Pure Kotlin <code>data class</code> — zéro dépendance framework. Le cœur métier de l'application.</p>
+                    <p>Pure Kotlin <code>data class</code> — zero framework dependencies. The business core of your app.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon green"><i data-feather="clipboard"></i></div>
                     <h3>Repository Interface</h3>
-                    <p>Contrat défini dans le domain. Implémenté par le data layer. Le ViewModel ne voit que l'interface.</p>
+                    <p>Contract defined in domain. Implemented by the data layer. ViewModel only sees the interface.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon green"><i data-feather="zap"></i></div>
                     <h3>UseCase</h3>
-                    <p><code>operator fun invoke()</code> — encapsule une opération métier. Optionnel, utilisé si logique partagée ≥2 VMs.</p>
+                    <p><code>operator fun invoke()</code> — encapsulates a business operation. Optional, used when logic is shared across ≥2 VMs.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon purple"><i data-feather="repeat"></i></div>
                     <h3>Mapper</h3>
-                    <p>Convertit DTO ↔ Domain. Deux styles : <code>object Mapper</code> ou extension functions. Jamais dans le ViewModel.</p>
+                    <p>Converts DTO ↔ Domain. Two styles: <code>object Mapper</code> or extension functions. Never in the ViewModel.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon purple"><i data-feather="layers"></i></div>
                     <h3>Repository Impl</h3>
-                    <p>Implémentation concrète avec <code>runCatching</code>. Coordonne remote + local DataSources.</p>
+                    <p>Concrete implementation using <code>runCatching</code>. Coordinates remote + local DataSources.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon purple"><i data-feather="radio"></i></div>
                     <h3>DTO</h3>
-                    <p><code>@Serializable</code> data class qui reflète le JSON API. Isolé dans <code>data/remote/dto/</code>.</p>
+                    <p><code>@Serializable</code> data class mirroring the JSON API. Isolated in <code>data/remote/dto/</code>.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon cyan"><i data-feather="cpu"></i></div>
                     <h3>ViewModel</h3>
-                    <p>State holder injectant des interfaces domain via Koin. Expose un <code>StateFlow&lt;UiState&gt;</code>.</p>
+                    <p>State holder injecting domain interfaces via Koin. Exposes a <code>StateFlow&lt;UiState&gt;</code>.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon cyan"><i data-feather="target"></i></div>
                     <h3>UiState</h3>
-                    <p><code>sealed interface</code> : Loading | Success | Error. Toujours exhaustif dans le <code>when</code>.</p>
+                    <p><code>sealed interface</code>: Loading | Success | Error. Always exhaustive in <code>when</code>.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon cyan"><i data-feather="smartphone"></i></div>
                     <h3>Screen</h3>
-                    <p>Composable stateless. Reçoit des données + callbacks. Séparé du Route (connecté au VM).</p>
+                    <p>Stateless composable. Receives data + callbacks. Separated from Route (connected to VM).</p>
                 </div>
                 <div class="card">
                     <div class="card-icon amber"><i data-feather="settings"></i></div>
                     <h3>Koin Module</h3>
-                    <p>Câblage <code>interface → impl</code> au runtime. <code>single</code> pour les repos, <code>viewModel</code> pour les VMs.</p>
+                    <p>Wiring <code>interface → impl</code> at runtime. <code>single</code> for repos, <code>viewModel</code> for VMs.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon red"><i data-feather="shield"></i></div>
                     <h3>Error Handling</h3>
-                    <p><code>Result&lt;T&gt;</code> + <code>runCatching</code> ou custom <code>AppResult&lt;T&gt;</code> sealed type pour des erreurs typées.</p>
+                    <p><code>Result&lt;T&gt;</code> + <code>runCatching</code> or custom <code>AppResult&lt;T&gt;</code> sealed type for typed errors.</p>
                 </div>
                 <div class="card">
                     <div class="card-icon blue"><i data-feather="check-circle"></i></div>
                     <h3>Fake Repository</h3>
-                    <p>Test double qui implémente l'interface domain. Pas de mocking framework — des Fakes purs.</p>
+                    <p>Test double implementing the domain interface. No mocking framework — pure Fakes.</p>
                 </div>
             </div>
         </div>
@@ -901,8 +901,8 @@
     <section>
         <div class="container">
             <div class="section-label">Code</div>
-            <h2 class="section-title">Exemples concrets</h2>
-            <p class="section-desc">Du domain model au ViewModel — chaque layer a un style distinct.</p>
+            <h2 class="section-title">Concrete Examples</h2>
+            <p class="section-desc">From domain model to ViewModel — each layer has a distinct style.</p>
 
             <div class="code-showcase">
                 <div class="code-block">
@@ -910,7 +910,7 @@
                         <span class="code-header-title">domain/model/Match.kt</span>
                         <span class="code-header-badge badge-domain">Domain</span>
                     </div>
-                    <div class="code-content"><pre><span class="cm">// Zéro import framework</span>
+                    <div class="code-content"><pre><span class="cm">// Zero framework imports</span>
 <span class="kw">data class</span> <span class="tp">Match</span>(
     <span class="kw">val</span> <span class="pr">homeTeam</span>: <span class="tp">Club</span>,
     <span class="kw">val</span> <span class="pr">awayTeam</span>: <span class="tp">Club</span>,
@@ -990,8 +990,8 @@
     <section id="flow">
         <div class="container">
             <div class="section-label">Data Flow</div>
-            <h2 class="section-title">Flux unidirectionnel</h2>
-            <p class="section-desc">Les events descendent, les données montent. Jamais de raccourci.</p>
+            <h2 class="section-title">Unidirectional Flow</h2>
+            <p class="section-desc">Events go down, data goes up. Never take shortcuts.</p>
 
             <div class="flow-container">
                 <div class="flow-step">
@@ -1029,7 +1029,7 @@
                 <div class="flow-step" style="border-color: var(--border-accent);">
                     <div class="flow-step-icon"><i data-feather="check-circle"></i></div>
                     <div class="flow-step-label">Domain Model</div>
-                    <div class="flow-step-sub">retour mappé</div>
+                    <div class="flow-step-sub">mapped return</div>
                 </div>
                 <div class="flow-arrow">→</div>
                 <div class="flow-step">
@@ -1052,7 +1052,7 @@
         <div class="container">
             <div class="section-label">Stack</div>
             <h2 class="section-title">Technologies</h2>
-            <p class="section-desc">Stack KMP-first — maximum de code partagé entre Android et iOS.</p>
+            <p class="section-desc">KMP-first stack — maximum shared code between Android and iOS.</p>
 
             <div class="tech-grid">
                 <div class="tech-chip"><span class="tech-chip-icon"><i data-feather="code"></i></span> Kotlin Multiplatform</div>
@@ -1074,25 +1074,25 @@
     <!-- Anti-patterns -->
     <section id="rules">
         <div class="container">
-            <div class="section-label">Règles</div>
+            <div class="section-label">Rules</div>
             <h2 class="section-title">Anti-patterns</h2>
-            <p class="section-desc">Ce qu'il faut éviter absolument — et la bonne alternative.</p>
+            <p class="section-desc">What to absolutely avoid — and the right alternative.</p>
 
             <table class="anti-table">
                 <thead>
-                    <tr><th>❌ Ne pas faire</th><th>✅ Faire</th></tr>
+                    <tr><th>❌ Don't</th><th>✅ Do</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Importer <code>data.*</code> dans le UI</td><td>Importer uniquement <code>domain.model.*</code></td></tr>
-                    <tr><td>Logique métier dans <code>@Composable</code></td><td>Extraire dans ViewModel ou UseCase</td></tr>
-                    <tr><td>DTOs comme modèles domain</td><td>Modèles domain séparés + mappers</td></tr>
-                    <tr><td>Hilt/Dagger en KMP</td><td>Koin (multiplatform compatible)</td></tr>
-                    <tr><td>Retrofit en KMP</td><td>Ktor Client</td></tr>
-                    <tr><td><code>GlobalScope</code></td><td><code>viewModelScope</code> ou structured concurrency</td></tr>
-                    <tr><td>Fat repository avec toute la logique</td><td>Séparer en DataSources focalisés</td></tr>
-                    <tr><td>ViewModel dans <code>screens/</code></td><td>Package <code>viewmodel/</code> séparé</td></tr>
-                    <tr><td>Android framework dans <code>domain/</code></td><td>Domain = pure Kotlin uniquement</td></tr>
-                    <tr><td>try/catch sans mapper les erreurs</td><td><code>runCatching</code> ou <code>Result&lt;T&gt;</code></td></tr>
+                    <tr><td>Import <code>data.*</code> in UI layer</td><td>Import only <code>domain.model.*</code></td></tr>
+                    <tr><td>Business logic in <code>@Composable</code></td><td>Extract to ViewModel or UseCase</td></tr>
+                    <tr><td>DTOs as domain models</td><td>Separate domain models + mappers</td></tr>
+                    <tr><td>Hilt/Dagger in KMP</td><td>Koin (multiplatform compatible)</td></tr>
+                    <tr><td>Retrofit in KMP</td><td>Ktor Client</td></tr>
+                    <tr><td><code>GlobalScope</code></td><td><code>viewModelScope</code> or structured concurrency</td></tr>
+                    <tr><td>Fat repository with all logic</td><td>Split into focused DataSources</td></tr>
+                    <tr><td>ViewModel in <code>screens/</code></td><td>Separate <code>viewmodel/</code> package</td></tr>
+                    <tr><td>Android framework in <code>domain/</code></td><td>Domain = pure Kotlin only</td></tr>
+                    <tr><td>try/catch without mapping errors</td><td><code>runCatching</code> or <code>Result&lt;T&gt;</code></td></tr>
                 </tbody>
             </table>
         </div>
@@ -1102,22 +1102,22 @@
     <section>
         <div class="container">
             <div class="section-label">Checklist</div>
-            <h2 class="section-title">Nouvelle feature</h2>
-            <p class="section-desc">Les étapes à suivre pour chaque nouvelle fonctionnalité.</p>
+            <h2 class="section-title">New Feature</h2>
+            <p class="section-desc">Steps to follow for every new feature implementation.</p>
 
             <ul class="checklist" id="checklist">
-                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Domain model créé (pure Kotlin)</li>
-                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Repository interface dans domain/</li>
-                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>UseCase (optionnel — si logique partagée)</li>
-                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>DTOs avec @Serializable</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Domain model created (pure Kotlin)</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Repository interface in domain/</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>UseCase (optional — if shared logic)</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>DTOs with @Serializable</li>
                 <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Mapper DTO → Domain</li>
-                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Repository impl avec runCatching</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Repository impl with runCatching</li>
                 <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>UiState sealed class</li>
-                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>ViewModel injecte interface domain</li>
-                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Screen stateless @Composable</li>
-                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Koin bindings mis à jour</li>
-                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Loading + Success + Error</li>
-                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Error handling avec Result&lt;T&gt;</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>ViewModel injects domain interface</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Stateless @Composable screen</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Koin bindings updated</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Loading + Success + Error states</li>
+                <li onclick="this.classList.toggle('checked')"><span class="check-box"></span>Error handling with Result&lt;T&gt;</li>
             </ul>
         </div>
     </section>
@@ -1125,9 +1125,9 @@
     <!-- References -->
     <section>
         <div class="container">
-            <div class="section-label">Fichiers</div>
-            <h2 class="section-title">Références du skill</h2>
-            <p class="section-desc">5 documents de référence détaillés pour approfondir chaque sujet.</p>
+            <div class="section-label">Files</div>
+            <h2 class="section-title">Skill References</h2>
+            <p class="section-desc">5 detailed reference documents to deep-dive into each topic.</p>
 
             <div class="cards-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
                 <div class="card" style="text-align:center;">
@@ -1168,18 +1168,18 @@
     <section id="install">
         <div class="container">
             <div class="section-label">Installation</div>
-            <h2 class="section-title">Installer le skill</h2>
-            <p class="section-desc">Clone le repo et copie dans le dossier skills de ton IDE.</p>
+            <h2 class="section-title">Install the Skill</h2>
+            <p class="section-desc">Clone the repo and copy it into your IDE's skills folder.</p>
 
             <div class="install-grid">
                 <div class="install-card">
-                    <h3><i data-feather="terminal"></i> Étape 1 — Cloner</h3>
+                    <h3><i data-feather="terminal"></i> Step 1 — Clone</h3>
                     <div class="install-step">Git clone</div>
                     <div class="install-cmd"><span class="kw">git</span> clone https://github.com/MedAmineTazarki/android-clean-architecture-skill.git</div>
                 </div>
 
                 <div class="install-card">
-                    <h3><i data-feather="copy"></i> Étape 2 — Copier</h3>
+                    <h3><i data-feather="copy"></i> Step 2 — Copy</h3>
                     <div class="install-step">Gemini / Antigravity IDE</div>
                     <div class="install-cmd"><span class="cm"># Windows</span>
 <span class="kw">xcopy</span> /E /I . <span class="st">"%USERPROFILE%\.gemini\config\skills\android-clean-architecture"</span>
@@ -1188,20 +1188,20 @@
 <span class="kw">cp</span> -r . <span class="st">~/.gemini/config/skills/android-clean-architecture</span></div>
                     <div class="install-step">Claude Code</div>
                     <div class="install-cmd"><span class="kw">cp</span> -r . <span class="st">~/.claude/skills/android-clean-architecture</span></div>
-                    <div class="install-note">Le skill s'active automatiquement quand tu travailles sur un projet Android/KMP.</div>
+                    <div class="install-note">The skill auto-activates when you work on an Android/KMP project.</div>
                 </div>
 
                 <div class="install-card">
-                    <h3><i data-feather="check-circle"></i> Étape 3 — Utiliser</h3>
-                    <div class="install-step">Exemples de prompts</div>
-                    <div class="install-cmd"><span class="st">"Crée un feature module settings avec Clean Architecture"</span>
+                    <h3><i data-feather="check-circle"></i> Step 3 — Use</h3>
+                    <div class="install-step">Example prompts</div>
+                    <div class="install-cmd"><span class="st">"Create a settings feature module with Clean Architecture"</span>
 
-<span class="st">"Ajoute un Repository offline-first pour les matchs"</span>
+<span class="st">"Add an offline-first Repository for matches"</span>
 
-<span class="st">"Structure le data layer avec DTOs et mappers"</span>
+<span class="st">"Structure the data layer with DTOs and mappers"</span>
 
-<span class="st">"Configure Koin pour le nouveau ViewModel"</span></div>
-                    <div class="install-note">L'IA suivra automatiquement les patterns du skill pour générer du code propre et cohérent.</div>
+<span class="st">"Configure Koin for the new ViewModel"</span></div>
+                    <div class="install-note">The AI will automatically follow the skill's patterns to generate clean, consistent code.</div>
                 </div>
             </div>
         </div>
@@ -1214,7 +1214,7 @@
             <p style="margin-top:12px;">
                 <a href="https://github.com/MedAmineTazarki/android-clean-architecture-skill" target="_blank" style="color:var(--accent); text-decoration:none; font-size:13px; font-weight:600;"><i data-feather="github" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;"></i> MedAmineTazarki/android-clean-architecture-skill</a>
             </p>
-            <p style="margin-top:8px; font-size: 11px; color:var(--text-muted);">MIT License · ~44 KB total · 6 fichiers · Global skill auto-activé</p>
+            <p style="margin-top:8px; font-size: 11px; color:var(--text-muted);">MIT License · ~44 KB total · 6 files · Auto-activated global skill</p>
         </div>
     </footer>
 
