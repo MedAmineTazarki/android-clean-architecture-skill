@@ -32,9 +32,18 @@ android-clean-architecture-skill/
 
 ## 🚀 Installation
 
-### For Gemini Code Assist / Antigravity IDE
+### One-liner (Recommended)
 
-Copy the skill folder into your global skills directory:
+```bash
+npx skills add MedAmineTazarki/android-clean-architecture-skill
+```
+
+Works with **Claude Code, Cursor, Copilot, Windsurf, Gemini, Antigravity, Cline**, and [20+ more agents](https://www.skills.sh/).
+
+### Manual Install
+
+<details>
+<summary>Gemini / Antigravity IDE</summary>
 
 ```bash
 # Windows
@@ -43,14 +52,16 @@ xcopy /E /I . "%USERPROFILE%\.gemini\config\skills\android-clean-architecture"
 # macOS/Linux
 cp -r . ~/.gemini/config/skills/android-clean-architecture
 ```
+</details>
 
-### For Claude Code
-
-Copy into your Claude skills directory:
+<details>
+<summary>Claude Code</summary>
 
 ```bash
 cp -r . ~/.claude/skills/android-clean-architecture
 ```
+</details>
+
 
 The skill auto-activates when you work on Android/KMP projects.
 
